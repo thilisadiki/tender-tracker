@@ -1,0 +1,17 @@
+{
+  "whatsapp_enabled": true,
+  "whatsapp_number": "+27727655204",
+  "whatsapp_display": "072 765 5204",
+  "whatsapp_provider": "callmebot",
+  "callmebot_api_key": "",
+  "email_enabled": true,
+  "recipient_email": "",
+  "notify_on_new_match": true,
+  "min_match_score": 80,
+  "notify_on_briefing_24h": true,
+  "notify_on_closing_48h": true,
+  "provinces": [
+    "Gauteng",
+    "Limpopo"
+  ]
+}

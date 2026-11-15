@@ -1,0 +1,617 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TenderPulse SA | Gauteng & Limpopo Tender Tracker</title>
+  <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+  <!-- Header -->
+  <header class="app-header">
+    <div class="brand-section">
+      <div class="brand-icon">ZA</div>
+      <div>
+        <h1 class="brand-title">TenderPulse SA</h1>
+        <p class="brand-subtitle">Gauteng & Limpopo • Government & Enterprise Tenders (ZAR)</p>
+      </div>
+    </div>
+
+    <!-- Navigation Tabs -->
+    <nav class="nav-tabs">
+      <button class="nav-tab-btn active" data-view="dashboard">
+        <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect width="7" height="9" x="3" y="3" rx="1"/><rect width="7" height="5" x="14" y="3" rx="1"/><rect width="7" height="9" x="14" y="12" rx="1"/><rect width="7" height="5" x="3" y="16" rx="1"/></svg>
+        Dashboard
+      </button>
+      <button class="nav-tab-btn" data-view="kanban">
+        <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M4 3h16a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2z"/><path d="M10 3v18"/><path d="M16 3v18"/></svg>
+        Pipeline Kanban
+      </button>
+      <button class="nav-tab-btn" data-view="table">
+        <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M3 3h18v18H3zM3 9h18M3 15h18M9 3v18"/></svg>
+        Tender Registry
+      </button>
+      <button class="nav-tab-btn" data-view="discovery">
+        <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="m4.93 4.93 4.24 4.24M14.83 9.17l4.24-4.24M14.83 14.83l4.24 4.24M9.17 14.83l-4.24 4.24"/></svg>
+        Live Scraper Feed
+      </button>
+      <button class="nav-tab-btn" data-view="calculator">
+        <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect width="16" height="20" x="4" y="2" rx="2"/><line x1="8" x2="16" y1="6" y2="6"/><line x1="16" x2="16" y1="14" y2="18"/><path d="M16 10h.01M12 10h.01M8 10h.01M12 14h.01M8 14h.01M12 18h.01M8 18h.01"/></svg>
+        Go / No-Go Matrix
+      </button>
+    </nav>
+
+    <!-- Header Actions -->
+    <div class="header-actions">
+      <button class="btn btn-secondary btn-sm" id="btn-open-alerts" title="Configure WhatsApp & Email Alerts">
+        <span style="color: #22c55e;">💬</span> WhatsApp & Alerts
+      </button>
+      <button class="btn btn-secondary btn-sm" id="btn-export-csv" title="Export pipeline to CSV">
+        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg>
+        Export CSV
+      </button>
+      <button class="btn btn-secondary btn-sm" id="btn-scan-feeds" title="Scan online tender boards">
+        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67"/></svg>
+        Scan eTenders
+      </button>
+      <button class="btn btn-primary" id="btn-add-tender">
+        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>
+        New Tender
+      </button>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <main class="main-content">
+    
+    <!-- KPI Metric Cards (in R / ZAR) -->
+    <section class="metrics-grid" id="metrics-container">
+      <div class="metric-card">
+        <div class="metric-header">
+          <span class="metric-title">Active SA Pipeline</span>
+          <span class="badge badge-dev" id="stat-active-count">0 Bids</span>
+        </div>
+        <div class="metric-val" id="stat-active-val">R 0</div>
+        <div class="metric-sub">Gauteng & Limpopo opportunities</div>
+      </div>
+
+      <div class="metric-card gov">
+        <div class="metric-header">
+          <span class="metric-title">Government (Public)</span>
+          <span class="badge badge-gov" id="stat-gov-count">0 Tenders</span>
+        </div>
+        <div class="metric-val" id="stat-gov-val">R 0</div>
+        <div class="metric-sub">eTenders, GPG, LPT & Municipal</div>
+      </div>
+
+      <div class="metric-card pvt">
+        <div class="metric-header">
+          <span class="metric-title">Private / Corporate</span>
+          <span class="badge badge-pvt" id="stat-pvt-count">0 RFPs</span>
+        </div>
+        <div class="metric-val" id="stat-pvt-val">R 0</div>
+        <div class="metric-sub">Mining, Telcos, Banking & Retail</div>
+      </div>
+
+      <div class="metric-card warning">
+        <div class="metric-header">
+          <span class="metric-title">Closing in < 7 Days</span>
+          <span class="badge" style="background: rgba(245,158,11,0.2); color:#fbbf24;">Urgent</span>
+        </div>
+        <div class="metric-val" id="stat-urgent-count" style="color: #fbbf24;">0</div>
+        <div class="metric-sub">Briefing & submission action</div>
+      </div>
+
+      <div class="metric-card won">
+        <div class="metric-header">
+          <span class="metric-title">Win Rate & Awarded</span>
+          <span class="badge" style="background: rgba(16,185,129,0.2); color:#34d399;" id="stat-win-rate">0%</span>
+        </div>
+        <div class="metric-val" id="stat-won-val" style="color: #34d399;">R 0</div>
+        <div class="metric-sub" id="stat-won-count">0 awarded contracts</div>
+      </div>
+    </section>
+
+    <!-- Urgent Alert Banner -->
+    <div class="alert-banner" id="urgent-alert" style="display: none;">
+      <div class="alert-content">
+        <span class="alert-icon">⚠️</span>
+        <div>
+          <strong style="color: #fbbf24;">South African Briefing & Submission Notice:</strong>
+          <span id="urgent-alert-text" style="color: #e2e8f0; font-size: 0.85rem; margin-left: 6px;"></span>
+        </div>
+      </div>
+      <button class="btn btn-secondary btn-sm" id="btn-view-urgent">Review Pipeline</button>
+    </div>
+
+    <!-- Filter & Search Toolbar (with Province) -->
+    <section class="filter-bar">
+      <div class="filter-group">
+        <div class="search-box">
+          <span class="search-icon">🔍</span>
+          <input type="text" class="form-input" id="filter-search" placeholder="Search reference, client, city (e.g. Polokwane, Joburg)...">
+        </div>
+
+        <div>
+          <select class="form-select" id="filter-province">
+            <option value="All">All Regions</option>
+            <option value="Gauteng">Gauteng (Joburg, Pretoria, Ekurhuleni)</option>
+            <option value="Limpopo">Limpopo (Polokwane, Capricorn, Vhembe)</option>
+            <option value="National">National (SITA / GCIS)</option>
+          </select>
+        </div>
+
+        <div>
+          <select class="form-select" id="filter-sector">
+            <option value="All">All Sectors</option>
+            <option value="Government">Government (Public Sector)</option>
+            <option value="Private Sector">Private Sector (Corporate / Mining)</option>
+          </select>
+        </div>
+
+        <div>
+          <select class="form-select" id="filter-category">
+            <option value="All">All Categories</option>
+            <option value="Software & Systems Development">Software & Systems Development</option>
+            <option value="Digital Marketing">Digital Marketing</option>
+          </select>
+        </div>
+
+        <div>
+          <select class="form-select" id="filter-status">
+            <option value="All">All Stages</option>
+            <option value="Identified">1. Identified</option>
+            <option value="Go/No-Go Review">2. Go/No-Go Review</option>
+            <option value="In Preparation">3. In Preparation</option>
+            <option value="Under Review">4. Under Review</option>
+            <option value="Submitted">5. Submitted</option>
+            <option value="Won">6. Won / Awarded</option>
+            <option value="Lost">7. Lost</option>
+          </select>
+        </div>
+
+        <div>
+          <select class="form-select" id="filter-priority">
+            <option value="All">All Priorities</option>
+            <option value="High">High Priority</option>
+            <option value="Medium">Medium Priority</option>
+            <option value="Low">Low Priority</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="filter-group">
+        <button class="btn btn-secondary btn-sm" id="btn-reset-filters">Reset Filters</button>
+      </div>
+    </section>
+
+    <!-- VIEW 1: Dashboard View -->
+    <section id="view-dashboard" class="tab-view active">
+      <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 1.5rem; margin-bottom: 1.5rem;">
+        
+        <!-- Category & Province Breakdown Cards -->
+        <div style="background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 12px; padding: 1.25rem;">
+          <h3 style="font-size: 0.95rem; font-weight: 700; margin-bottom: 1rem; color: #e2e8f0; display:flex; justify-content:space-between; align-items:center;">
+            <span>Gauteng vs Limpopo & Category Allocation</span>
+            <span style="font-size:0.75rem; color:var(--text-dim); font-weight:normal;">ZAR Value Split</span>
+          </h3>
+          <div style="display: flex; flex-direction: column; gap: 1.1rem;" id="breakdown-bars">
+            <!-- Rendered by JS -->
+          </div>
+        </div>
+
+        <!-- South African Compliance Card -->
+        <div style="background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 12px; padding: 1.25rem;">
+          <h3 style="font-size: 0.95rem; font-weight: 700; margin-bottom: 0.75rem; color: #e2e8f0;">SA Statutory Checklist</h3>
+          <p style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 0.75rem;">
+            Ensure mandatory statutory compliance before allocating bid drafting hours:
+          </p>
+          <div style="display: flex; flex-direction: column; gap: 0.5rem; font-size: 0.78rem;">
+            <div style="display: flex; gap: 8px; align-items: center;">
+              <span style="color: #10b981; font-weight: bold;">✓</span>
+              <span><strong>SARS Tax PIN:</strong> Valid Tax Compliance Status</span>
+            </div>
+            <div style="display: flex; gap: 8px; align-items: center;">
+              <span style="color: #10b981; font-weight: bold;">✓</span>
+              <span><strong>CSD Report:</strong> Master Registration MAAA number</span>
+            </div>
+            <div style="display: flex; gap: 8px; align-items: center;">
+              <span style="color: #10b981; font-weight: bold;">✓</span>
+              <span><strong>B-BBEE Status:</strong> Affidavit or SANAS Level 1/2</span>
+            </div>
+            <div style="display: flex; gap: 8px; align-items: center;">
+              <span style="color: #10b981; font-weight: bold;">✓</span>
+              <span><strong>SBD Forms:</strong> SBD 4, SBD 6.1 (or MBD 4/6.1)</span>
+            </div>
+            <div style="display: flex; gap: 8px; align-items: center;">
+              <span style="color: #fbbf24; font-weight: bold;">!</span>
+              <span><strong>Briefing Register:</strong> Compulsory attendance log</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Priority Tenders Table on Dashboard -->
+      <div class="table-container">
+        <div style="padding: 1rem 1.25rem; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center;">
+          <h3 style="font-size: 0.95rem; font-weight: 700;">Gauteng & Limpopo Priority Bids</h3>
+          <span style="font-size: 0.8rem; color: var(--text-dim);" id="dashboard-tender-count"></span>
+        </div>
+        <table class="tender-table">
+          <thead>
+            <tr>
+              <th>Ref #</th>
+              <th>Tender & Issuing Entity</th>
+              <th>Region & Sector</th>
+              <th>Category</th>
+              <th>Est. Value (ZAR)</th>
+              <th>Status</th>
+              <th>Deadline</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody id="dashboard-table-body">
+            <!-- Dynamic Rows -->
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- VIEW 2: Kanban Pipeline View -->
+    <section id="view-kanban" class="tab-view" style="display: none;">
+      <div class="kanban-board" id="kanban-container">
+        <!-- 6 Kanban Columns Generated Dynamically -->
+      </div>
+    </section>
+
+    <!-- VIEW 3: Data Table View -->
+    <section id="view-table" class="tab-view" style="display: none;">
+      <div class="table-container">
+        <table class="tender-table">
+          <thead>
+            <tr>
+              <th>Reference</th>
+              <th>Title & Client</th>
+              <th>Province</th>
+              <th>Sector</th>
+              <th>Category</th>
+              <th>Est. Value (ZAR)</th>
+              <th>Status</th>
+              <th>Deadline</th>
+              <th>Go/No-Go</th>
+              <th>Compliance</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="full-table-body">
+            <!-- Rendered by JS -->
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- VIEW 4: Discovery Feed & Scraper -->
+    <section id="view-discovery" class="tab-view" style="display: none;">
+      <div style="background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 12px; padding: 1.25rem; margin-bottom: 1.5rem; display: flex; justify-content: space-between; align-items: center;">
+        <div>
+          <h3 style="font-size: 1.1rem; font-weight: 700;">South African Procurement Feed (Gauteng & Limpopo)</h3>
+          <p style="font-size: 0.85rem; color: var(--text-muted); margin-top: 0.25rem;">
+            Monitors National Treasury e-Tenders, GPG e-Tenders, Limpopo Treasury Bulletin, SITA, SAP Ariba, and Coupa mining boards.
+          </p>
+        </div>
+        <button class="btn btn-primary" id="btn-refresh-feed">
+          <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67"/></svg>
+          Run Scrapers Now
+        </button>
+      </div>
+
+      <div class="discovery-grid" id="discovery-container">
+        <!-- Rendered by JS -->
+      </div>
+    </section>
+
+    <!-- VIEW 5: Go / No-Go Decision Matrix -->
+    <section id="view-calculator" class="tab-view" style="display: none;">
+      <div style="max-width: 900px; margin: 0 auto; background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 14px; padding: 1.75rem;">
+        <h3 style="font-size: 1.25rem; font-weight: 700; margin-bottom: 0.5rem;">Weighted Go / No-Go Decision Calculator (SA Public & Private)</h3>
+        <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 1.5rem;">
+          Rate each domain factor from 1 (High Risk / Non-Compliant) to 5 (Full Compliance / High Win Probability).
+        </p>
+
+        <div style="display: flex; flex-direction: column; gap: 1.25rem;" id="calc-factors">
+          <!-- Capability -->
+          <div style="background: #0f172a; padding: 1rem; border-radius: 8px; border: 1px solid var(--border);">
+            <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+              <strong>1. Technical Capability & Solution Architecture (Weight: 25%)</strong>
+              <span id="label-cap" style="color: #38bdf8; font-weight: 700;">4 / 5</span>
+            </div>
+            <input type="range" min="1" max="5" value="4" class="calc-slider" id="slider-cap" style="width: 100%;">
+            <div style="font-size: 0.75rem; color: var(--text-dim); margin-top: 4px;">Direct experience in required tech stack / marketing deliverables.</div>
+          </div>
+
+          <!-- Compliance -->
+          <div style="background: #0f172a; padding: 1rem; border-radius: 8px; border: 1px solid var(--border);">
+            <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+              <strong>2. Statutory Compliance (SARS PIN, CSD, B-BBEE, SBD Forms) (Weight: 25%)</strong>
+              <span id="label-comp" style="color: #38bdf8; font-weight: 700;">5 / 5</span>
+            </div>
+            <input type="range" min="1" max="5" value="5" class="calc-slider" id="slider-comp" style="width: 100%;">
+            <div style="font-size: 0.75rem; color: var(--text-dim); margin-top: 4px;">Strict non-disqualification compliance: TCS PIN, CSD, SBD 4/6.1, briefing attendance.</div>
+          </div>
+
+          <!-- Capacity -->
+          <div style="background: #0f172a; padding: 1rem; border-radius: 8px; border: 1px solid var(--border);">
+            <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+              <strong>3. Delivery Capacity & Team Availability (Weight: 15%)</strong>
+              <span id="label-res" style="color: #38bdf8; font-weight: 700;">4 / 5</span>
+            </div>
+            <input type="range" min="1" max="5" value="4" class="calc-slider" id="slider-res" style="width: 100%;">
+            <div style="font-size: 0.75rem; color: var(--text-dim); margin-top: 4px;">Availability of certified engineers / account managers in Gauteng or Limpopo.</div>
+          </div>
+
+          <!-- Commercial Margin -->
+          <div style="background: #0f172a; padding: 1rem; border-radius: 8px; border: 1px solid var(--border);">
+            <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+              <strong>4. Commercial Viability & Operating Profit Margin (Weight: 15%)</strong>
+              <span id="label-marg" style="color: #38bdf8; font-weight: 700;">4 / 5</span>
+            </div>
+            <input type="range" min="1" max="5" value="4" class="calc-slider" id="slider-marg" style="width: 100%;">
+            <div style="font-size: 0.75rem; color: var(--text-dim); margin-top: 4px;">Healthy profit margin (>30%) and acceptable government 30-day payment terms.</div>
+          </div>
+
+          <!-- Client Relationship -->
+          <div style="background: #0f172a; padding: 1rem; border-radius: 8px; border: 1px solid var(--border);">
+            <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+              <strong>5. Buyer Relationship & Past Performance (Weight: 10%)</strong>
+              <span id="label-rel" style="color: #38bdf8; font-weight: 700;">3 / 5</span>
+            </div>
+            <input type="range" min="1" max="5" value="3" class="calc-slider" id="slider-rel" style="width: 100%;">
+            <div style="font-size: 0.75rem; color: var(--text-dim); margin-top: 4px;">Verified references with the municipality, department, or enterprise client.</div>
+          </div>
+
+          <!-- Competition -->
+          <div style="background: #0f172a; padding: 1rem; border-radius: 8px; border: 1px solid var(--border);">
+            <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+              <strong>6. Competitive Advantage & Win Likelihood (Weight: 10%)</strong>
+              <span id="label-win" style="color: #38bdf8; font-weight: 700;">3 / 5</span>
+            </div>
+            <input type="range" min="1" max="5" value="3" class="calc-slider" id="slider-win" style="width: 100%;">
+            <div style="font-size: 0.75rem; color: var(--text-dim); margin-top: 4px;">Differentiators, proprietary software IP, or Level 1 B-BBEE scoring advantage.</div>
+          </div>
+        </div>
+
+        <!-- Calculated Result Box -->
+        <div style="margin-top: 1.5rem; background: #131c2e; border: 1px solid var(--primary); border-radius: 10px; padding: 1.25rem; display: flex; align-items: center; justify-content: space-between;">
+          <div>
+            <span style="font-size: 0.8rem; text-transform: uppercase; color: var(--text-dim); letter-spacing: 0.05em;">Calculated Readiness Score</span>
+            <div style="font-size: 2.2rem; font-weight: 800; color: #38bdf8;" id="calc-result-score">82%</div>
+            <div style="font-size: 0.85rem; color: #cbd5e1; margin-top: 4px;" id="calc-result-rec">Strong Strategic Fit: Proceed to bid proposal drafting.</div>
+          </div>
+          <div>
+            <span id="calc-result-badge" class="badge" style="font-size: 1rem; padding: 6px 16px; background: rgba(16,185,129,0.2); color: #34d399; border: 1px solid #10b981;">GO</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- MODAL: WhatsApp & Email Alerts Settings -->
+  <div class="modal-overlay" id="modal-alerts">
+    <div class="modal-content" style="max-width: 680px;">
+      <div class="modal-header">
+        <h2 class="modal-title">💬 WhatsApp & Email Notification Setup</h2>
+        <button class="modal-close" id="btn-close-alerts">&times;</button>
+      </div>
+      <div class="modal-body">
+        <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 1.25rem;">
+          Configure automatic notifications for urgent compulsory briefings, submission deadlines, and newly published high-match tenders in <strong>Gauteng</strong> and <strong>Limpopo</strong>.
+        </p>
+
+        <!-- WhatsApp Settings Card -->
+        <div style="background: #0f172a; border: 1px solid rgba(34, 197, 94, 0.3); border-radius: 10px; padding: 1.25rem; margin-bottom: 1.25rem;">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.75rem;">
+            <div style="display: flex; align-items: center; gap: 8px;">
+              <span style="font-size: 1.2rem;">📱</span>
+              <strong style="color: #4ade80;">WhatsApp Instant Alerts</strong>
+            </div>
+            <label style="display: flex; align-items: center; gap: 6px; font-size: 0.8rem; cursor: pointer;">
+              <input type="checkbox" id="cfg-wa-enabled" checked> Enable WhatsApp
+            </label>
+          </div>
+
+          <div class="form-grid">
+            <div>
+              <label class="form-label">WhatsApp Mobile Number *</label>
+              <input type="text" class="form-input form-input-full" id="cfg-wa-number" value="+27727655204" placeholder="e.g. 072 765 5204 or +27727655204">
+              <span style="font-size: 0.7rem; color: #4ade80;">Registered: South African mobile (+27)</span>
+            </div>
+
+            <div>
+              <label class="form-label">WhatsApp Gateway</label>
+              <select class="form-select form-input-full" id="cfg-wa-provider">
+                <option value="callmebot" selected>CallMeBot Gateway (Instant / Personal)</option>
+                <option value="twilio">Twilio WhatsApp Business API</option>
+              </select>
+            </div>
+
+            <div class="form-group-full">
+              <label class="form-label">CallMeBot API Key (For Automated 24/7 Push)</label>
+              <input type="text" class="form-input form-input-full" id="cfg-wa-apikey" placeholder="Enter API key from CallMeBot (e.g. 123456)">
+              <div style="font-size: 0.72rem; color: var(--text-dim); margin-top: 4px; line-height: 1.4;">
+                💡 <strong>Free setup in 15 seconds:</strong><br>
+                1. Add <strong>+34 644 44 22 09</strong> to your WhatsApp contacts (name it <em>CallMeBot</em>).<br>
+                2. Send WhatsApp message: <code>I allow callmebot to send me messages</code><br>
+                3. CallMeBot will reply with your personal API Key. Paste it here to enable background alerts!
+              </div>
+            </div>
+          </div>
+
+          <div style="margin-top: 0.75rem; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px;">
+            <a id="btn-open-wa-direct" href="https://wa.me/27727655204?text=🚨%20*TenderPulse%20SA%20Alert*%20Notification%20test%20active%20for%20Gauteng%20and%20Limpopo%20tenders" target="_blank" class="btn btn-secondary btn-sm" style="color: #38bdf8;">
+              💬 Open Test in WhatsApp ↗
+            </a>
+            <button class="btn btn-secondary btn-sm" id="btn-test-whatsapp" style="color: #4ade80; border-color: rgba(34, 197, 94, 0.4);">
+              Send Automated WhatsApp Push
+            </button>
+          </div>
+        </div>
+
+        <!-- Email Settings Card -->
+        <div style="background: #0f172a; border: 1px solid var(--border); border-radius: 10px; padding: 1.25rem;">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.75rem;">
+            <div style="display: flex; align-items: center; gap: 8px;">
+              <span style="font-size: 1.2rem;">📧</span>
+              <strong>Email Daily Digest & Deadlines</strong>
+            </div>
+            <label style="display: flex; align-items: center; gap: 6px; font-size: 0.8rem; cursor: pointer;">
+              <input type="checkbox" id="cfg-em-enabled" checked> Enable Email
+            </label>
+          </div>
+
+          <div>
+            <label class="form-label">Recipient Email Address *</label>
+            <input type="email" class="form-input form-input-full" id="cfg-em-address" placeholder="your-name@company.co.za">
+          </div>
+
+          <div style="margin-top: 0.75rem; display: flex; justify-content: flex-end;">
+            <button class="btn btn-secondary btn-sm" id="btn-test-email">
+              Send Test Email
+            </button>
+          </div>
+        </div>
+
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" id="btn-cancel-alerts">Cancel</button>
+        <button class="btn btn-primary" id="btn-save-alerts">Save Alert Preferences</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: Add / Edit Tender -->
+  <div class="modal-overlay" id="modal-tender-form">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2 class="modal-title" id="form-modal-title">Create New South African Tender</h2>
+        <button class="modal-close" id="btn-close-form">&times;</button>
+      </div>
+      <div class="modal-body">
+        <form id="tender-form">
+          <input type="hidden" id="form-id">
+          
+          <div class="form-grid">
+            <div class="form-group-full">
+              <label class="form-label">Tender Title *</label>
+              <input type="text" class="form-input form-input-full" id="form-title" required placeholder="e.g. Provincial Citizen Portal Cloud Modernization or Tourism Digital Marketing Campaign">
+            </div>
+
+            <div>
+              <label class="form-label">Issuing Entity / Department / Client *</label>
+              <input type="text" class="form-input form-input-full" id="form-entity" required placeholder="e.g. Gauteng Dept of e-Gov, Polokwane Municipality, or Vodacom">
+            </div>
+
+            <div>
+              <label class="form-label">Province / Region *</label>
+              <select class="form-select form-input-full" id="form-province" required>
+                <option value="Gauteng" selected>Gauteng</option>
+                <option value="Limpopo">Limpopo</option>
+                <option value="National">National (SITA / GCIS)</option>
+              </select>
+            </div>
+
+            <div>
+              <label class="form-label">Sector *</label>
+              <select class="form-select form-input-full" id="form-sector" required>
+                <option value="Government">Government (Public Sector)</option>
+                <option value="Private Sector">Private Sector (Corporate / Mining)</option>
+              </select>
+            </div>
+
+            <div>
+              <label class="form-label">Category *</label>
+              <select class="form-select form-input-full" id="form-category" required>
+                <option value="Software & Systems Development">Software & Systems Development</option>
+                <option value="Digital Marketing">Digital Marketing</option>
+              </select>
+            </div>
+
+            <div>
+              <label class="form-label">Estimated Value (ZAR - R) *</label>
+              <input type="number" step="10000" class="form-input form-input-full" id="form-value" placeholder="e.g. 8500000">
+            </div>
+
+            <div>
+              <label class="form-label">Submission Deadline *</label>
+              <input type="text" class="form-input form-input-full" id="form-deadline" required placeholder="YYYY-MM-DD 11:00 AM">
+            </div>
+
+            <div>
+              <label class="form-label">Compulsory Briefing Date & Time</label>
+              <input type="text" class="form-input form-input-full" id="form-briefing" placeholder="e.g. 2026-11-20 10:00 AM">
+            </div>
+
+            <div>
+              <label class="form-label">Briefing Format</label>
+              <select class="form-select form-input-full" id="form-briefing-type">
+                <option value="None">None</option>
+                <option value="Compulsory Virtual (MS Teams)">Compulsory Virtual (MS Teams)</option>
+                <option value="Compulsory In-Person">Compulsory In-Person</option>
+                <option value="Optional Virtual">Optional Virtual</option>
+              </select>
+            </div>
+
+            <div>
+              <label class="form-label">B-BBEE Preference Level</label>
+              <input type="text" class="form-input form-input-full" id="form-bbbee" placeholder="e.g. Level 1 or 2 (80/20 Preference)">
+            </div>
+
+            <div>
+              <label class="form-label">Submission Method</label>
+              <input type="text" class="form-input form-input-full" id="form-method" placeholder="e.g. Two-Envelope Physical Delivery or e-Tender Portal">
+            </div>
+
+            <div>
+              <label class="form-label">Location / City</label>
+              <input type="text" class="form-input form-input-full" id="form-location" placeholder="e.g. Polokwane, Johannesburg, Pretoria">
+            </div>
+
+            <div class="form-group-full">
+              <label class="form-label">Scope of Work & Specification</label>
+              <textarea class="form-input form-input-full" id="form-description" placeholder="Summarize deliverables, technical architecture, or campaign deliverables..."></textarea>
+            </div>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" id="btn-cancel-form">Cancel</button>
+        <button class="btn btn-primary" id="btn-save-form">Save Tender</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: Tender Detail & Compliance Workspace -->
+  <div class="modal-overlay" id="modal-detail-view">
+    <div class="modal-content" style="max-width: 900px;">
+      <div class="modal-header">
+        <div>
+          <span id="detail-ref" style="font-family: monospace; font-size: 0.8rem; color: var(--text-dim);"></span>
+          <h2 class="modal-title" id="detail-title" style="margin-top: 2px;"></h2>
+        </div>
+        <button class="modal-close" id="btn-close-detail">&times;</button>
+      </div>
+      <div class="modal-body" id="detail-body">
+        <!-- Rendered by JS -->
+      </div>
+      <div class="modal-footer" id="detail-footer">
+        <!-- Dynamic Actions -->
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Notification Container -->
+  <div class="toast-container" id="toast-container"></div>
+
+  <script src="/app.js"></script>
+</body>
+</html>
